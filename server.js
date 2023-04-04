@@ -16,8 +16,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Khai báo sử dụng các route ~
-const userRoutes = require('./routes/User.routes');
-app.use('/api/users', userRoutes);
 const KhoaTapRoutes = require('./routes/KhoaTap.routes');
 app.use('/api/khoataps', KhoaTapRoutes);
 const CauLacBoRoutes = require('./routes/CauLacBo.routes');
@@ -32,6 +30,8 @@ const ThoiKhoaBieuRoutes = require('./routes/ThoiKhoaBieu.routes');
 app.use('/api/thoikhoabieu', ThoiKhoaBieuRoutes);
 const HoaDonRoutes = require('./routes/HoaDons.routes');
 app.use('/api/hoadon', HoaDonRoutes);
+const AuthenticationRoutes = require('./routes/Authentication.routes');
+app.use('/api/authentication', AuthenticationRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 3002;

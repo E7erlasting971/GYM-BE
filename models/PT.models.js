@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const PTSchema = new mongoose.Schema({
+
   TenPT: {
     type: String,
     required: true,
@@ -20,6 +21,8 @@ const PTSchema = new mongoose.Schema({
   }
 
 },{ versionKey: false } ); 
+const PT = mongoose.model('PT', PTSchema);
+module.exports = PT;
 // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
 
 module.exports = mongoose.model("PT", PTSchema);

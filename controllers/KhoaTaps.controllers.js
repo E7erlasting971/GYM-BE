@@ -5,7 +5,7 @@ exports.getAllKhoaTaps = async(req, res) => {
     try {
         // const KhoaTaps = await KhoaTap.find();
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const KhoaTaps = await KhoaTap.find().populate('idPT');
+        const KhoaTaps = await KhoaTap.find().populate('idPT').populate('idCLB');
         res.status(200).json(KhoaTaps);
     } catch (error) {
         console.error(error);
@@ -16,7 +16,22 @@ exports.getKhoaTapById = async(req, res) => {
     try {
         const { id } = req.params;
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const KhoaTaps = await KhoaTap.find({ _id: id }).populate('idPT');
+        const KhoaTaps = await KhoaTap.find({ _id: id }).populate('idPT').populate('idCLB');
+        res.status(200).json(KhoaTaps);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+exports.getKhoaTapByIdCLB = async(req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(id);
+        // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
+        const KhoaTaps = await KhoaTap.find({ idCLB: id }).populate('idPT').populate('idCLB');
+        if (KhoaTaps.length === 0) {
+            return res.status(404).json({ message: 'Không tìm thấy bất kỳ khóa tập nào' });
+        }
         res.status(200).json(KhoaTaps);
     } catch (error) {
         console.error(error);
@@ -27,20 +42,20 @@ exports.getKhoaTapById = async(req, res) => {
 // ở đây ta tạo KhoaTap model bên file KhoaTap.models với các thông tin từ req.body và lưu vào database bằng phương thức save
 exports.createKhoaTap = async(req, res) => {
     try {
+        const { TenKhoaTap, MotaKhoaTap, GiaTien, idPT, idCLB, ChonNgayTap, GioBatDau, GioKetThuc, ImageKhoaTap, ThoiGianKhoaTap } = req.body;
         const newKhoaTap = new KhoaTap({
-            TenKhoaTap: req.body.TenKhoaTap,
-            MoTaKhoaTap: req.body.MoTaKhoaTap,
-            GiaTien: req.body.GiaTien,
-            idPT: req.body.idPT,
-            idCLB: req.body.idCLB,
-            ChonNgayTap: req.body.ChonNgayTap,
-            GioBatDau: req.body.GioBatDau,
-            GioKetThuc: req.body.GioKetThuc,
-            ImageKhoaTap: req.body.ImageKhoaTap,
-            ThoiGianKhoaTap: req.body.ThoiGianKhoaTap,
-            //   idCauLacBo:req.body.idCauLacBo,
+            TenKhoaTap: TenKhoaTap,
+            MotaKhoaTap: MotaKhoaTap,
+            GiaTien: GiaTien,
+            idPT: idPT,
+            idCLB: idCLB,
+            ChonNgayTap: ChonNgayTap,
+            GioBatDau: GioBatDau,
+            GioKetThuc: GioKetThuc,
+            ImageKhoaTap: ImageKhoaTap,
+            ThoiGianKhoaTap: ThoiGianKhoaTap
         });
-
+        console.log(MotaKhoaTap);
         const savedKhoaTap = await newKhoaTap.save();
         res.status(200).send({ message: "Đã tạo khóa tập thành công", KhoaTap: savedKhoaTap });
 
@@ -73,17 +88,18 @@ exports.deleteKhoaTap = (req, res) => {
 exports.updateKhoaTap = (req, res) => {
     // truyền vào req.params.KhoaTapId để mình xđ KhoaTap cần đc upd và các trường dữ liệu mới được cung cấp
     // bởi client thông qua req.body.
+    const { TenKhoaTap, MotaKhoaTap, GiaTien, idPT, idCLB, ChonNgayTap, GioBatDau, GioKetThuc, ImageKhoaTap, ThoiGianKhoaTap } = req.body;
     KhoaTap.findByIdAndUpdate(req.params.id, {
-            TenKhoaTap: req.body.TenKhoaTap,
-            MotaKhoaTap: req.body.MotaKhoaTap,
-            GiaTien: req.body.GiaTien,
-            idPT: req.body.idPT,
-            ChonNgayTap: req.body.ChonNgayTap,
-            GioBatDau: req.body.GioBatDau,
-            GioKetThuc: req.body.GioKetThuc,
-            ImageKhoaTap: req.body.ImageKhoaTap,
-            ThoiGianKhoaTap: req.body.ThoiGianKhoaTap,
-            //  idCauLacBo:req.body.idCauLacBo,
+            TenKhoaTap: TenKhoaTap,
+            MotaKhoaTap: MotaKhoaTap,
+            GiaTien: GiaTien,
+            idPT: idPT,
+            idCLB: idCLB,
+            ChonNgayTap: ChonNgayTap,
+            GioBatDau: GioBatDau,
+            GioKetThuc: GioKetThuc,
+            ImageKhoaTap: ImageKhoaTap,
+            ThoiGianKhoaTap: ThoiGianKhoaTap
         }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
         .then(KhoaTap => {
             if (!KhoaTap) {

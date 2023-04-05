@@ -7,7 +7,8 @@ router.get('/', KhoaTapController.getAllKhoaTaps);
 
 // // GET KhoaTap by id
 router.get('/:id', KhoaTapController.getKhoaTapById);
-
+// // GET KhoaTap by id
+router.get('/getKhoaTapByIdCLB/:id', KhoaTapController.getKhoaTapByIdCLB);
 // CREATE a new KhoaTap
 router.post('/', KhoaTapController.createKhoaTap);
 

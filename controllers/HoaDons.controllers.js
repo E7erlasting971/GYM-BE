@@ -8,7 +8,7 @@ exports.getHoaDonsByHocVien = async(req, res) => {
         const { id } = req.params;
 
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const HoaDons = await HoaDons.find({ idHocVien: id }).populate('idHocVien').populate("idKhoaTap");
+        const HoaDons = await HoaDon.find({ idHocVien: id }).populate('idHocVien').populate("idKhoaTap");
         res.status(200).json(HoaDons);
     } catch (error) {
         console.error(error);
@@ -17,10 +17,7 @@ exports.getHoaDonsByHocVien = async(req, res) => {
 };
 exports.getHoaDons = async(req, res) => {
     try {
-        const { id } = req.params;
-
-        // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const HoaDons = await HoaDons.find();
+        const HoaDons = await HoaDon.find().populate('idHocVien').populate("idKhoaTap");
         res.status(200).json(HoaDons);
     } catch (error) {
         console.error(error);

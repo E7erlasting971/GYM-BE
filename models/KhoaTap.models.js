@@ -6,7 +6,7 @@ const KhoaTapSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    MoTaKhoaTap: {
+    MotaKhoaTap: {
         type: String,
         required: true,
     },
@@ -22,6 +22,7 @@ const KhoaTapSchema = new mongoose.Schema({
     idCLB: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CauLacBo',
+        required: true
     },
     ChonNgayTap: {
         type: [String],
@@ -45,16 +46,8 @@ const KhoaTapSchema = new mongoose.Schema({
     ThoiGianKhoaTap: {
         type: Number,
         //   required: true,
-    },
-    // idCauLacBo: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'CauLacBo',
-    // //  required: true,
-    // },
-
+    }
 }, { versionKey: false });
-const KhoaTap = mongoose.model('KhoaTap', KhoaTapSchema);
-module.exports = KhoaTap;
 // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
 
 module.exports = mongoose.model("KhoaTap", KhoaTapSchema);

@@ -22,4 +22,3 @@ const TinTucSchema = new mongoose.Schema({
 // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
 
 module.exports = mongoose.model("TinTuc", TinTucSchema);
-

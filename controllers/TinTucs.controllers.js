@@ -5,7 +5,7 @@ exports.getAllTinTucs = async (req, res) => {
         res.status(200).json(TinTucs);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error 123' });
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 exports.getTinTucById = async (req, res) => {

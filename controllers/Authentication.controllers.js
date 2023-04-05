@@ -4,23 +4,12 @@ const bcrypt = require('bcrypt');
 
 exports.UserAuthentication = async(req, res) => {
     const { TenDangNhap, MatKhau } = req.body;
-    try {
-        const hocvien = await HocVien.findOne({ "TenDangNhap": TenDangNhap });
-        console.log(hocvien);
-        console.log(bcrypt.hashSync(MatKhau, bcrypt.genSaltSync(10)));
-        const salt = await bcrypt.genSalt(10);
-        //const hash = await bcrypt.hash(MatKhau, salt);
-        const passwordMatch = bcrypt.compareSync(MatKhau, hocvien.MatKhau);
-        console.log(passwordMatch);
-        if (passwordMatch) {
+    const hocvien = await HocVien.findOne({ "TenDangNhap": TenDangNhap });
+    if (hocvien)
+        if (bcrypt.compareSync(MatKhau, hocvien.MatKhau)) {
             res.send(hocvien);
         } else {
-
-            res.status(401).send({ msg: 'Invalid password', HocVien: hocvien });
-
+            res.status(401).send({ msg: 'Invalid password', hocvien });
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal server error');
-    }
+    else res.send("cound not find hoc vien");
 };

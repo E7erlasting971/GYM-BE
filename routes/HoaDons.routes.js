@@ -3,10 +3,10 @@ const router = express.Router();
 const HoaDonController = require('../controllers/HoaDons.controllers');
 
 // GET all KhoaTaps
-router.get('/getHoaDonsByHocVien', HoaDonController.getHoaDonsByHocVien);
+router.get('/getHoaDonsByHocVien/:id', HoaDonController.getHoaDonsByHocVien);
 router.get('/getHoaDons', HoaDonController.getHoaDons);
 // CREATE a new hoa don
-router.post('/', HoaDonController.createHoaDon);
+router.post('/createHoaDon', HoaDonController.createHoaDon);
 //update trang thai hoa don
 router.put('/:id', HoaDonController.updateHoaDon);
 

@@ -1,14 +1,27 @@
 const KhoaTap = require('../models/KhoaTap.models');
+const PT = require('../models/PT.models');
+
 exports.getAllKhoaTaps = async (req, res) => {
   try {
-    const KhoaTaps = await KhoaTap.find();
+    // const KhoaTaps = await KhoaTap.find();
+    // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
+    const KhoaTaps = await KhoaTap.find().populate('idPT');
     res.status(200).json(KhoaTaps);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
+// KhoaTap.aggregate([
+//   {
+//     $lookup: {
+//       from: "PT",
+//       localField: "MaPT",
+//       foreignField: "_id",
+//       as: "PT"
+//     }
+//   }
+// ])
 
 // ở đây ta tạo KhoaTap model bên file KhoaTap.models với các thông tin từ req.body và lưu vào database bằng phương thức save
 exports.createKhoaTap = async (req, res) => {
@@ -17,12 +30,13 @@ exports.createKhoaTap = async (req, res) => {
         TenKhoaTap:req.body.TenKhoaTap,
         MotaKhoaTap:req.body.MotaKhoaTap,
         GiaTien:req.body.GiaTien,
-        TenPT:req.body.TenPT,
+        idPT:req.body.idPT,
         ChonNgayTap:req.body.ChonNgayTap,
         GioBatDau:req.body.GioBatDau,
         GioKetThuc:req.body.GioKetThuc,
         ImageKhoaTap:req.body.ImageKhoaTap,
         ThoiGianKhoaTap:req.body.ThoiGianKhoaTap,
+     //   idCauLacBo:req.body.idCauLacBo,
       });
 
       const savedKhoaTap = await newKhoaTap.save();
@@ -61,12 +75,13 @@ exports.createKhoaTap = async (req, res) => {
       TenKhoaTap:req.body.TenKhoaTap,
       MotaKhoaTap:req.body.MotaKhoaTap,
       GiaTien:req.body.GiaTien,
-      TenPT:req.body.TenPT,
+      idPT:req.body.idPT,
       ChonNgayTap:req.body.ChonNgayTap,
       GioBatDau:req.body.GioBatDau,
       GioKetThuc:req.body.GioKetThuc,
       ImageKhoaTap:req.body.ImageKhoaTap,
       ThoiGianKhoaTap:req.body.ThoiGianKhoaTap,
+    //  idCauLacBo:req.body.idCauLacBo,
     }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
       .then(KhoaTap => {
         if (!KhoaTap) {

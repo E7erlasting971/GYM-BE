@@ -20,7 +20,9 @@ const CauLacBoSchema = new mongoose.Schema({
     required: true,
   },
 
-},{ versionKey: false } ); 
-// loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
+},{ versionKey: false } ); // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
+const CauLacBo = mongoose.model('CauLacBo', CauLacBoSchema);
+module.exports = CauLacBo;
+
 
 module.exports = mongoose.model("CauLacBo", CauLacBoSchema);

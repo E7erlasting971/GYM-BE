@@ -22,6 +22,8 @@ exports.createCauLacBo = async (req, res) => {
       res.status(500).send({ message: "Lỗi không thể tạo CLB" });
     }
   }
+
+  
   
   exports.deleteCauLacBo = (req, res) => {
     const { id } = req.params;

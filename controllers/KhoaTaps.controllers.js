@@ -26,7 +26,6 @@ exports.getKhoaTapById = async(req, res) => {
 exports.getKhoaTapByIdCLB = async(req, res) => {
     try {
         const { id } = req.params;
-        console.log(id);
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
         const KhoaTaps = await KhoaTap.find({ idCLB: id }).populate('idPT').populate('idCLB');
         if (KhoaTaps.length === 0) {

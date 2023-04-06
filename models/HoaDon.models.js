@@ -24,8 +24,6 @@ const HoaDonSchema = new mongoose.Schema({
         required: true
     }
 }, { versionKey: false });
-const HoaDon = mongoose.model('HoaDon', HoaDonSchema);
-module.exports = HoaDon;
 // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
 
 module.exports = mongoose.model("HoaDon", HoaDonSchema);

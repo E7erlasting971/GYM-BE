@@ -30,6 +30,8 @@ const ThoiKhoaBieuRoutes = require('./routes/ThoiKhoaBieu.routes');
 app.use('/api/thoikhoabieu', ThoiKhoaBieuRoutes);
 const HoaDonRoutes = require('./routes/HoaDons.routes');
 app.use('/api/hoadon', HoaDonRoutes);
+const ChiTietHoaDonRoutes = require('./routes/ChiTietHoaDon.routes');
+app.use('/api/chitiethoadon', ChiTietHoaDonRoutes);
 const AuthenticationRoutes = require('./routes/Authentication.routes');
 app.use('/api/authentication', AuthenticationRoutes);
 

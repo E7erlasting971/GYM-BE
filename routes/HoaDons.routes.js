@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const HoaDonController = require('../controllers/HoaDons.controllers');
 
-// GET all KhoaTaps
+// GET all Hoa Don
 router.get('/getHoaDonsByHocVien/:id', HoaDonController.getHoaDonsByHocVien);
 router.get('/getHoaDons', HoaDonController.getHoaDons);
 // CREATE a new hoa don

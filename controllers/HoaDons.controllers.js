@@ -1,18 +1,17 @@
 const KhoaTap = require('../models/KhoaTap.models');
-const HoaDon = require('../models/HoaDon.models');
+const ThoiKhoaBieu = require('../models/ThoiKhoaBieu.models');
 const ChiTietHoaDon = require('../models/ChiTietHoaDon.models');
+const HoaDon = require('../models/HoaDon.models');
 const currentDate = new Date();
 const dateString = currentDate.toISOString().substring(0, 10);
-const mongoose = require("mongoose");
-const dbHoaDon = mongoose.model("HoaDon");
-const dbChiTietHoaDon = mongoose.model('ChiTietHoaDon');
+const moment = require('moment');
 
 exports.getHoaDonsByHocVien = async(req, res) => {
     try {
         const { id } = req.params;
 
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const HoaDons = await HoaDon.find({ idHocVien: id }).populate('idHocVien').populate("idKhoaTap");
+        const HoaDons = await HoaDon.find({ idHocVien: id }).populate('idHocVien').populate("idKhoaTap").populate('idHoaDon');
         res.status(200).json(HoaDons);
     } catch (error) {
         console.error(error);
@@ -30,9 +29,8 @@ exports.getHoaDons = async(req, res) => {
 };
 exports.createHoaDon = async(req, res) => {
     try {
-        const newHoaDon = new dbHoaDon({
+        const newHoaDon = new HoaDon({
             idHocVien: req.body.idHocVien,
-            idKhoaTap: req.body.idKhoaTap,
             tongTien: req.body.tongTien,
             ngayTao: req.body.ngayTao ? req.body.ngayTao.substring(0, 10) : dateString,
             trangThai: req.body.trangThai
@@ -41,7 +39,7 @@ exports.createHoaDon = async(req, res) => {
         const hoaDonId = savedHoaDon._id;
         if (req.body.chiTietHoaDon && req.body.chiTietHoaDon.length) {
             for (let i = 0; i < req.body.chiTietHoaDon.length; i++) {
-                const newChiTietHoaDon = new dbChiTietHoaDon({
+                const newChiTietHoaDon = new ChiTietHoaDon({
                     idHoaDon: hoaDonId,
                     idKhoaTap: req.body.chiTietHoaDon[i].idKhoaTap,
                     donGia: req.body.chiTietHoaDon[i].donGia // thông tin chi tiết hóa đơn được truyền vào từ client
@@ -60,11 +58,12 @@ exports.createHoaDon = async(req, res) => {
     }
 }
 
-exports.updateHoaDon = (req, res) => {
+exports.updateHoaDon = async(req, res) => {
     // truyền vào req.params.KhoaTapId để mình xđ KhoaTap cần đc upd và các trường dữ liệu mới được cung cấp
     // bởi client thông qua req.body.
     HoaDon.findByIdAndUpdate(req.params.id, {
-            trangThai: req.body.trangThai
+            trangThai: req.body.trangThai,
+            ngayCapNhat: req.body.ngayCapNhat
                 //  idCauLacBo:req.body.idCauLacBo,
         }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
         .then(HoaDon => {
@@ -73,15 +72,70 @@ exports.updateHoaDon = (req, res) => {
                     message: "Hoa Don không tìm thấy với id  " + req.params.id
                 });
             }
-            res.send(KhoaTap);
+            res.send(HoaDon);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
                     message: "Hoa Don không tìm thấy với id " + req.params.id
                 });
             }
+            console.log(err);
             return res.status(500).send({
+
                 message: "Lỗi không thể update Hoa Don với id " + req.params.id
             });
         });
+
+};
+
+exports.updateHoaDonAsyncTKB = async(req, res) => {
+    // truyền vào req.params.KhoaTapId để mình xđ KhoaTap cần đc upd và các trường dữ liệu mới được cung cấp
+    // bởi client thông qua req.body.
+    HoaDon.findByIdAndUpdate(req.params.id, {
+            trangThai: "done",
+            ngayCapNhat: req.body.ngayCapNhat
+                //  idCauLacBo:req.body.idCauLacBo,
+        }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
+        .then(HoaDon => {
+            if (!HoaDon) {
+                return res.status(404).send({
+                    message: "Hoa Don không tìm thấy với id  " + req.params.id
+                });
+            }
+            res.send(HoaDon);
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Hoa Don không tìm thấy với id " + req.params.id
+                });
+            }
+            console.log(err);
+            return res.status(500).send({
+
+                message: "Lỗi không thể update Hoa Don với id " + req.params.id
+            });
+        });
+    if (req.body.thoiKhoaBieu && req.body.thoiKhoaBieu.length) {
+        for (let i = 0; i < req.body.thoiKhoaBieu.length; i++) {
+            const startDate = await HoaDon.getNgayCapNhat(
+                req.params.id
+            );
+            const update = moment(startDate);
+            const khoaTap = await KhoaTap.findById(req.body.idKhoaTap);
+            if (khoaTap && khoaTap.ThoiGianKhoaTap) {
+                const numberOfMonths = khoaTap.ThoiGianKhoaTap;
+                const futureDate = update.add(numberOfMonths, 'months').format('YYYY-MM-DD');
+                console.log(req.body.idHocVien);
+                const newThoiKhoaBieu = new ThoiKhoaBieu({
+                    idHocVien: req.body.idHocVien,
+                    idKhoaTap: req.body.idKhoaTap,
+                    ngayBatDau: startDate,
+                    ngayKetThuc: futureDate
+                });
+                await newThoiKhoaBieu.save();
+            }
+            //const numberOfMonths2 = 3;
+
+        }
+    }
 };

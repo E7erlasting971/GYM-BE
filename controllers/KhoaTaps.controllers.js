@@ -1,5 +1,4 @@
 const KhoaTap = require('../models/KhoaTap.models');
-const PT = require('../models/PT.models');
 
 exports.getAllKhoaTaps = async(req, res) => {
     try {

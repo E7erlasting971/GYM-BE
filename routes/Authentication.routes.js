@@ -1,7 +1,7 @@
 /**
  * @swagger
- * /api/authentication/userlogin:
- *   post:
+ * /api/authentication/:
+ *   userlogin/post:
  *     summary: Authenticate user credentials
  *     description: Authenticate user credentials and return JWT token
  *     tags:
@@ -13,13 +13,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               TenDangNhap:
  *                 type: string
- *               password:
+ *               MatKhau:
  *                 type: string
  *             required:
- *               - email
- *               - password
+ *               - TenDangNhap
+ *               - MatKhau
  *     responses:
  *       200:
  *         description: Authentication successful
@@ -39,10 +39,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *  /api/authentication/adminlogin:
- *   post:
- *     summary: Authenticate user credentials
- *     description: Authenticate user credentials and return JWT token
+ *   adminlogin/post:
+ *     summary: Authenticate admin credentials
+ *     description: Authenticate admin credentials and return JWT token
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -52,13 +51,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               TenDangNhap:
  *                 type: string
- *               password:
+ *               MatKhau:
  *                 type: string
  *             required:
- *               - email
- *               - password
+ *               - TenDangNhap
+ *               - MatKhau
  *     responses:
  *       200:
  *         description: Authentication successful
@@ -84,5 +83,6 @@ const router = express.Router();
 const AuthenticationController = require('../controllers/Authentication.controllers');
 
 router.post('/userlogin', AuthenticationController.UserAuthentication);
+
 router.post('/adminlogin', AuthenticationController.AdminAuthentication);
 module.exports = router;

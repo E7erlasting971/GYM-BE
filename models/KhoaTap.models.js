@@ -49,5 +49,16 @@ const KhoaTapSchema = new mongoose.Schema({
     }
 }, { versionKey: false });
 // loại bỏ thuộc tính __v vì khi mình POST lên thì nó tạo thêm giá trị " __v " vì cái này là tính năng của mongodb
-
+KhoaTapSchema.statics.getGioBatDau = async function(id) {
+    const khoaTap = await this.findOne({ _id: id }).lean().exec();
+    return khoaTap ? (khoaTap.GioBatDau) : null;
+};
+KhoaTapSchema.statics.getGioKetThuc = async function(id) {
+    const khoaTap = await this.findOne({ _id: id }).lean().exec();
+    return khoaTap ? (khoaTap.GioKetThuc) : null;
+};
+KhoaTapSchema.statics.getChonNgayTap = async function(id) {
+    const khoaTap = await this.findOne({ _id: id }).lean().exec();
+    return khoaTap ? (khoaTap.ChonNgayTap) : null;
+};
 module.exports = mongoose.model("KhoaTap", KhoaTapSchema);

@@ -61,14 +61,24 @@ exports.createHoaDon = async(req, res) => {
                         });
                         return;
                     }
-                    // if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap === (req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
-                    //     req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau === (req.body.chiTietHoaDon[j].idKhoaTap.GioBatDau) &&
-                    //     req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc === (req.body.chiTietHoaDon[j].idKhoaTap.GioKetThuc)) {
-                    //     res.status(401).send({
-                    //         message: 'Trùng tkb'
-                    //     });
-                    //     return;
-                    // }
+                    const bd1 = await KhoaTap.getGioBatDau(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const bd2 = await KhoaTap.getGioBatDau(req.body.chiTietHoaDon[j].idKhoaTap);
+                    const kt1 = await KhoaTap.getGioKetThuc(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const kt2 = await KhoaTap.getGioKetThuc(req.body.chiTietHoaDon[j].idKhoaTap);
+                    const ngayTap1 = await KhoaTap.getChonNgayTap(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const ngayTap2 = await KhoaTap.getChonNgayTap(req.body.chiTietHoaDon[j].idKhoaTap);
+
+                    if (bd1 === bd2 && kt1 === kt2) {
+                        for (let h = 0; h < ngayTap1.length; h++)
+                            for (let k = 0; k < ngayTap2.length; k++) {
+                                if (ngayTap1[h] === ngayTap2[k]) {
+                                    res.status(401).send({
+                                        message: 'Trùng tkb '
+                                    });
+                                    return;
+                                }
+                            }
+                    }
                 }
             }
             for (let i = 0; i < req.body.chiTietHoaDon.length; i++) {
@@ -82,8 +92,7 @@ exports.createHoaDon = async(req, res) => {
                 await newChiTietHoaDon.save();
             }
             res.status(200).send({
-                message: "Đã tạo hóa đơn thành công",
-                //HoaDon: savedHoaDon
+                message: "Đã tạo hóa đơn thành công"
             });
         } else {
             res.send({

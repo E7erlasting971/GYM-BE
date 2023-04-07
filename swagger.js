@@ -18,3 +18,4 @@ const specs = swaggerJSDoc(options);
 module.exports = (app) => {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 };
+// http: //localhost:3002/api-docs/#/ copy paste this url to your website and use api

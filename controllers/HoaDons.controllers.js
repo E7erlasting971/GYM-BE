@@ -45,9 +45,9 @@ exports.createHoaDon = async(req, res) => {
                             message: 'Trùng khóa tập'
                         });
                         return;
-                    } else if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap.contains(req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
-                        req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau.contains(req.body.chiTietHoaDon[j].GioBatDau.ChonNgayTap) &&
-                        req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc.contains(req.body.chiTietHoaDon[j].GioKetThuc.ChonNgayTap)) {
+                    } else if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap === (req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
+                        req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau === (req.body.chiTietHoaDon[j].idKhoaTap.GioBatDau) &&
+                        req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc === (req.body.chiTietHoaDon[j].idKhoaTap.GioKetThuc)) {
                         res.send({
                             message: 'Trùng tkb'
                         });

@@ -36,9 +36,10 @@ exports.createHoaDon = async(req, res) => {
             trangThai: "Chờ thanh toán"
         });
         if (req.body.chiTietHoaDon && req.body.chiTietHoaDon.length) {
-            const savedHoaDon = await newHoaDon.save();
-            const hoaDonId = savedHoaDon._id;
+
             if (req.body.chiTietHoaDon.length === 1) {
+                const savedHoaDon = await newHoaDon.save();
+                const hoaDonId = savedHoaDon._id;
                 const newChiTietHoaDon = new ChiTietHoaDon({
                     idHoaDon: hoaDonId,
                     idKhoaTap: req.body.chiTietHoaDon[0].idKhoaTap,
@@ -68,10 +69,8 @@ exports.createHoaDon = async(req, res) => {
                         });
                         return;
                     }
-                    console.log(hoaDonId);
-                    console.log(req.body.chiTietHoaDon[i].idKhoaTap);
-                    console.log(req.body.chiTietHoaDon[i].donGia);
-
+                    const savedHoaDon = await newHoaDon.save();
+                    const hoaDonId = savedHoaDon._id;
                     const newChiTietHoaDon = new ChiTietHoaDon({
                         idHoaDon: hoaDonId,
                         idKhoaTap: req.body.chiTietHoaDon[i].idKhoaTap,
@@ -81,7 +80,7 @@ exports.createHoaDon = async(req, res) => {
                     res.status(200).send({
                         message: "Đã tạo hóa đơn thành công",
                         HoaDon: savedHoaDon,
-                        cihiTietHoaDon: createHoaDon
+                        chiTietHoaDon: createHoaDon
                     });
                 }
             }

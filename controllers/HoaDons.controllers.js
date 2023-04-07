@@ -11,7 +11,7 @@ exports.getHoaDonsByHocVien = async(req, res) => {
         const { id } = req.params;
 
         // khúc này là join 2 bảng PT và KhoaTap để lấy ra Tên PT trong Reactjs FormKhoaTap
-        const HoaDons = await HoaDon.find({ idHocVien: id }).populate('idHocVien').populate("idKhoaTap").populate('idHoaDon');
+        const HoaDons = await HoaDon.find({ idHocVien: id });
         res.status(200).json(HoaDons);
     } catch (error) {
         console.error(error);

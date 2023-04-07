@@ -1,16 +1,14 @@
-const { Double, Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 
 const ThoiKhoaBieuSchema = new mongoose.Schema({
-
+    // idHoaDon: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'HoaDon',
+    //     // required: true,
+    // },
     idHocVien: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'HocVien',
-        // required: true,
-    },
-    idHoaDon: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'HoaDon',
         // required: true,
     },
     idKhoaTap: {

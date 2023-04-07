@@ -91,10 +91,10 @@ exports.updateHoaDon = async(req, res) => {
 exports.updateHoaDonAsyncTKB = async(req, res) => {
     // truyền vào req.params.KhoaTapId để mình xđ KhoaTap cần đc upd và các trường dữ liệu mới được cung cấp
     // bởi client thông qua req.body.
+
     HoaDon.findByIdAndUpdate(req.params.id, {
-            trangThai: "done",
-            ngayCapNhat: req.body.ngayCapNhat
-                //  idCauLacBo:req.body.idCauLacBo,
+            trangThai: "đã thanh toán",
+            ngayCapNhat: Date.now().toString()
         }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
         .then(HoaDon => {
             if (!HoaDon) {
@@ -115,27 +115,20 @@ exports.updateHoaDonAsyncTKB = async(req, res) => {
                 message: "Lỗi không thể update Hoa Don với id " + req.params.id
             });
         });
+
     if (req.body.thoiKhoaBieu && req.body.thoiKhoaBieu.length) {
         for (let i = 0; i < req.body.thoiKhoaBieu.length; i++) {
-            const startDate = await HoaDon.getNgayCapNhat(
-                req.params.id
-            );
-            const update = moment(startDate);
-            const khoaTap = await KhoaTap.findById(req.body.idKhoaTap);
-            if (khoaTap && khoaTap.ThoiGianKhoaTap) {
-                const numberOfMonths = khoaTap.ThoiGianKhoaTap;
-                const futureDate = update.add(numberOfMonths, 'months').format('YYYY-MM-DD');
-                console.log(req.body.idHocVien);
-                const newThoiKhoaBieu = new ThoiKhoaBieu({
-                    idHocVien: req.body.idHocVien,
-                    idKhoaTap: req.body.idKhoaTap,
-                    ngayBatDau: startDate,
-                    ngayKetThuc: futureDate
-                });
-                await newThoiKhoaBieu.save();
-            }
-            //const numberOfMonths2 = 3;
+            const startDate = await HoaDon.getNgayCapNhat(req.params.id);
 
+            const khoaTap = await KhoaTap.findById(req.body.thoiKhoaBieu[i].idKhoaTap);
+            const futureDate = moment(startDate).add(khoaTap.ThoiGianKhoaTap, 'months').format('YYYY-MM-DD');
+            const newThoiKhoaBieu = new ThoiKhoaBieu({
+                idHocVien: req.body.thoiKhoaBieu[i].idHocVien,
+                idKhoaTap: req.body.thoiKhoaBieu[i].idKhoaTap,
+                ngayBatDau: startDate,
+                ngayKetThuc: futureDate
+            });
+            await newThoiKhoaBieu.save();
         }
     }
 };

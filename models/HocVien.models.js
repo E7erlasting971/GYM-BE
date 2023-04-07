@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
 const HocVienSchema = new mongoose.Schema({
     TenDangNhap: {
         type: String,

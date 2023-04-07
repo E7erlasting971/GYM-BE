@@ -61,29 +61,30 @@ exports.createHoaDon = async(req, res) => {
                         });
                         return;
                     }
-                    if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap === (req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
-                        req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau === (req.body.chiTietHoaDon[j].idKhoaTap.GioBatDau) &&
-                        req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc === (req.body.chiTietHoaDon[j].idKhoaTap.GioKetThuc)) {
-                        res.status(500).send({
-                            message: 'Trùng tkb'
-                        });
-                        return;
-                    }
-                    const savedHoaDon = await newHoaDon.save();
-                    const hoaDonId = savedHoaDon._id;
-                    const newChiTietHoaDon = new ChiTietHoaDon({
-                        idHoaDon: hoaDonId,
-                        idKhoaTap: req.body.chiTietHoaDon[i].idKhoaTap,
-                        donGia: req.body.chiTietHoaDon[i].donGia // thông tin chi tiết hóa đơn được truyền vào từ client
-                    });
-                    const createHoaDon = await newChiTietHoaDon.save();
-                    res.status(200).send({
-                        message: "Đã tạo hóa đơn thành công",
-                        HoaDon: savedHoaDon,
-                        chiTietHoaDon: createHoaDon
-                    });
+                    // if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap === (req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
+                    //     req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau === (req.body.chiTietHoaDon[j].idKhoaTap.GioBatDau) &&
+                    //     req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc === (req.body.chiTietHoaDon[j].idKhoaTap.GioKetThuc)) {
+                    //     res.status(401).send({
+                    //         message: 'Trùng tkb'
+                    //     });
+                    //     return;
+                    // }
                 }
             }
+            for (let i = 0; i < req.body.chiTietHoaDon.length; i++) {
+                const savedHoaDon = await newHoaDon.save();
+                const hoaDonId = savedHoaDon._id;
+                const newChiTietHoaDon = new ChiTietHoaDon({
+                    idHoaDon: hoaDonId,
+                    idKhoaTap: req.body.chiTietHoaDon[i].idKhoaTap,
+                    donGia: req.body.chiTietHoaDon[i].donGia // thông tin chi tiết hóa đơn được truyền vào từ client
+                });
+                await newChiTietHoaDon.save();
+            }
+            res.status(200).send({
+                message: "Đã tạo hóa đơn thành công",
+                //HoaDon: savedHoaDon
+            });
         } else {
             res.send({
                 message: 'Rỗng khóa tập'

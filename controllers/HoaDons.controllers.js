@@ -62,6 +62,11 @@ exports.createHoaDon = async(req, res) => {
                     }
                 }
             }
+        } else {
+            res.send({
+                message: 'Rỗng khóa tập'
+            });
+            return;
         }
         res.status(200).send({
             message: "Đã tạo hóa đơn thành công",
@@ -104,13 +109,11 @@ exports.updateHoaDon = async(req, res) => {
 };
 
 exports.updateHoaDonAsyncTKB = async(req, res) => {
-    // truyền vào req.params.KhoaTapId để mình xđ KhoaTap cần đc upd và các trường dữ liệu mới được cung cấp
-    // bởi client thông qua req.body.
 
     HoaDon.findByIdAndUpdate(req.params.id, {
             trangThai: "Đã thanh toán",
             ngayCapNhat: Date.now().toString()
-        }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
+        }, { new: true })
         .then(HoaDon => {
             if (!HoaDon) {
                 return res.status(404).send({
@@ -133,7 +136,6 @@ exports.updateHoaDonAsyncTKB = async(req, res) => {
 
     if (req.body.thoiKhoaBieu && req.body.thoiKhoaBieu.length) {
         for (let i = 0; i < req.body.thoiKhoaBieu.length; i++) {
-            //const startDate = await HoaDon.getNgayCapNhat(req.params.id);
             const startDate = new Date(await HoaDon.getNgayCapNhat(req.params.id));
             const khoaTap = await KhoaTap.findById(req.body.thoiKhoaBieu[i].idKhoaTap);
             const futureDate = new Date(moment(startDate).add(khoaTap.ThoiGianKhoaTap, 'months').format('YYYY-MM-DD'));

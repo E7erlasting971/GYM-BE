@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const app = express();
 
+
 const uri = 'mongodb+srv://lythinh1805:Thinh123456@cluster0.f5wz3di.mongodb.net/WibuGym?retryWrites=true&w=majority'
 
 // Kết nối tới MongoDB
@@ -40,3 +41,5 @@ const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
+const swagger = require('./swagger');
+swagger(app);

@@ -4,6 +4,7 @@ const HocVienSchema = new mongoose.Schema({
     TenDangNhap: {
         type: String,
         required: true,
+        unique: true
     },
     MatKhau: {
         type: String,

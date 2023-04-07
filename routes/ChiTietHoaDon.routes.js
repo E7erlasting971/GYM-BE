@@ -1,3 +1,16 @@
+/**
+ * @swagger
+ * /api/chitiethoadon:
+ *   get:
+ *     summary: Returns all chitiethoadon by idHoaDon
+ *     tags: [chitiethoadon]
+ *     responses:
+ *       200:
+ *         description: List of chitiethoadon
+ *         content:
+ *           application/json:
+ *             schema:
+ */
 const express = require('express');
 const router = express.Router();
 const ChiTietHoaDonController = require('../controllers/ChiTietHoaDon.controllers');

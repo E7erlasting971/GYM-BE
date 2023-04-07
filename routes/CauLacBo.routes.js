@@ -17,7 +17,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CauLacBo'
+ *              $ref: '#/components/schemas/CauLacBo'
  *     responses:
  *       201:
  *         description: Successfully created a new CauLacBo

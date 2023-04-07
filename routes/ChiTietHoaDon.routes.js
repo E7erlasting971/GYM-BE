@@ -10,6 +10,7 @@
  *         content:
  *           application/json:
  *             schema:
+ *               $ref: '#/components/schemas/ChTietHoaDon'
  */
 const express = require('express');
 const router = express.Router();

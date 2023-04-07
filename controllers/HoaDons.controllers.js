@@ -29,7 +29,12 @@ exports.getHoaDons = async(req, res) => {
 };
 exports.createHoaDon = async(req, res) => {
     try {
-
+        const newHoaDon = new HoaDon({
+            idHocVien: req.body.idHocVien,
+            tongTien: req.body.tongTien,
+            ngayTao: req.body.ngayTao ? req.body.ngayTao.substring(0, 10) : dateString,
+            trangThai: "Chờ thanh toán"
+        });
         if (req.body.chiTietHoaDon && req.body.chiTietHoaDon.length) {
             for (let i = 0; i < req.body.chiTietHoaDon.length - 1; i++) {
                 for (let j = i + 1; j < req.body.chiTietHoaDon.length; j++) {
@@ -46,13 +51,8 @@ exports.createHoaDon = async(req, res) => {
                         });
                         return;
                     } else {
-                        const newHoaDon = new HoaDon({
-                            idHocVien: req.body.idHocVien,
-                            tongTien: req.body.tongTien,
-                            ngayTao: req.body.ngayTao ? req.body.ngayTao.substring(0, 10) : dateString,
-                            trangThai: "Chờ thanh toán"
-                        });
                         const savedHoaDon = await newHoaDon.save();
+
                         const hoaDonId = savedHoaDon._id;
                         const newChiTietHoaDon = new ChiTietHoaDon({
                             idHoaDon: hoaDonId,

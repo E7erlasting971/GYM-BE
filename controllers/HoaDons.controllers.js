@@ -56,7 +56,7 @@ exports.createHoaDon = async(req, res) => {
             for (let i = 0; i < req.body.chiTietHoaDon.length; i++) {
                 for (let j = i + 1; j < req.body.chiTietHoaDon.length; j++) {
                     if (req.body.chiTietHoaDon[i].idKhoaTap === req.body.chiTietHoaDon[j].idKhoaTap) {
-                        res.send({
+                        res.status(500).send({
                             message: 'Trùng khóa tập'
                         });
                         return;
@@ -64,7 +64,7 @@ exports.createHoaDon = async(req, res) => {
                     if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap === (req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
                         req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau === (req.body.chiTietHoaDon[j].idKhoaTap.GioBatDau) &&
                         req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc === (req.body.chiTietHoaDon[j].idKhoaTap.GioKetThuc)) {
-                        res.send({
+                        res.status(500).send({
                             message: 'Trùng tkb'
                         });
                         return;

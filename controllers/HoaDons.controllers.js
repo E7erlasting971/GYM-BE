@@ -50,6 +50,7 @@ exports.createHoaDon = async(req, res) => {
                     HoaDon: savedHoaDon,
                     cihiTietHoaDon: createHoaDon
                 });
+                return;
             }
             for (let i = 0; i < req.body.chiTietHoaDon.length; i++) {
                 for (let j = i + 1; j < req.body.chiTietHoaDon.length; j++) {

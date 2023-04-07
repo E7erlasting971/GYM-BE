@@ -33,7 +33,7 @@ exports.createHoaDon = async(req, res) => {
             idHocVien: req.body.idHocVien,
             tongTien: req.body.tongTien,
             ngayTao: req.body.ngayTao ? req.body.ngayTao.substring(0, 10) : dateString,
-            trangThai: req.body.trangThai
+            trangThai: "Chờ thanh toán"
         });
         const savedHoaDon = await newHoaDon.save();
         const hoaDonId = savedHoaDon._id;
@@ -93,7 +93,7 @@ exports.updateHoaDonAsyncTKB = async(req, res) => {
     // bởi client thông qua req.body.
 
     HoaDon.findByIdAndUpdate(req.params.id, {
-            trangThai: "đã thanh toán",
+            trangThai: "Đã thanh toán",
             ngayCapNhat: Date.now().toString()
         }, { new: true }) //  Chúng ta sử dụng { new: true } để trả về thông tin KhoaTap đã được cập nhật.
         .then(HoaDon => {
@@ -118,10 +118,10 @@ exports.updateHoaDonAsyncTKB = async(req, res) => {
 
     if (req.body.thoiKhoaBieu && req.body.thoiKhoaBieu.length) {
         for (let i = 0; i < req.body.thoiKhoaBieu.length; i++) {
-            const startDate = await HoaDon.getNgayCapNhat(req.params.id);
-
+            //const startDate = await HoaDon.getNgayCapNhat(req.params.id);
+            const startDate = new Date(await HoaDon.getNgayCapNhat(req.params.id));
             const khoaTap = await KhoaTap.findById(req.body.thoiKhoaBieu[i].idKhoaTap);
-            const futureDate = moment(startDate).add(khoaTap.ThoiGianKhoaTap, 'months').format('YYYY-MM-DD');
+            const futureDate = new Date(moment(startDate).add(khoaTap.ThoiGianKhoaTap, 'months').format('YYYY-MM-DD'));
             const newThoiKhoaBieu = new ThoiKhoaBieu({
                 idHocVien: req.body.thoiKhoaBieu[i].idHocVien,
                 idKhoaTap: req.body.thoiKhoaBieu[i].idKhoaTap,

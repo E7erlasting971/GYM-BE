@@ -36,6 +36,8 @@ exports.createHoaDon = async(req, res) => {
             trangThai: "Chờ thanh toán"
         });
         if (req.body.chiTietHoaDon && req.body.chiTietHoaDon.length) {
+            const savedHoaDon = await newHoaDon.save();
+            const hoaDonId = savedHoaDon._id;
             for (let i = 0; i < req.body.chiTietHoaDon.length - 1; i++) {
                 for (let j = i + 1; j < req.body.chiTietHoaDon.length; j++) {
                     if (req.body.chiTietHoaDon[i].idKhoaTap === req.body.chiTietHoaDon[j].idKhoaTap) {
@@ -51,28 +53,28 @@ exports.createHoaDon = async(req, res) => {
                         });
                         return;
                     } else {
-                        const savedHoaDon = await newHoaDon.save();
 
-                        const hoaDonId = savedHoaDon._id;
                         const newChiTietHoaDon = new ChiTietHoaDon({
                             idHoaDon: hoaDonId,
                             idKhoaTap: req.body.chiTietHoaDon[i].idKhoaTap,
                             donGia: req.body.chiTietHoaDon[i].donGia // thông tin chi tiết hóa đơn được truyền vào từ client
                         });
                         await newChiTietHoaDon.save();
+
                     }
                 }
             }
+            res.status(200).send({
+                message: "Đã tạo hóa đơn thành công",
+                HoaDon: savedHoaDon
+            });
         } else {
             res.send({
                 message: 'Rỗng khóa tập'
             });
             return;
         }
-        res.status(200).send({
-            message: "Đã tạo hóa đơn thành công",
-            HoaDon: savedHoaDon
-        });
+
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "Lỗi không thể tạo hóa đơn" });

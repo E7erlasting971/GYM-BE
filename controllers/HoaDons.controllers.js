@@ -41,12 +41,16 @@ exports.createHoaDon = async(req, res) => {
             for (let i = 0; i < req.body.chiTietHoaDon.length - 1; i++) {
                 for (let j = i + 1; j < req.body.chiTietHoaDon.length; j++) {
                     if (req.body.chiTietHoaDon[i].idKhoaTap === req.body.chiTietHoaDon[j].idKhoaTap) {
-                        res.send("Trùng khóa tập");
+                        res.send({
+                            message: 'Trùng khóa tập'
+                        });
                         return;
                     } else if (req.body.chiTietHoaDon[i].idKhoaTap.ChonNgayTap.contains(req.body.chiTietHoaDon[j].idKhoaTap.ChonNgayTap) &&
                         req.body.chiTietHoaDon[i].idKhoaTap.GioBatDau.contains(req.body.chiTietHoaDon[j].GioBatDau.ChonNgayTap) &&
                         req.body.chiTietHoaDon[i].idKhoaTap.GioKetThuc.contains(req.body.chiTietHoaDon[j].GioKetThuc.ChonNgayTap)) {
-                        console.log(req.body.chiTietHoaDon[i].ThoiGianKhoaTap);
+                        res.send({
+                            message: 'Trùng tkb'
+                        });
                         return;
                     } else {
                         const newChiTietHoaDon = new ChiTietHoaDon({

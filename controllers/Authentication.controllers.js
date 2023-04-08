@@ -16,7 +16,6 @@ exports.UserAuthentication = async(req, res) => {
 exports.AdminAuthentication = async(req, res) => {
     const { TenDangNhap, MatKhau } = req.body;
     const admin = await Admin.findOne({ "TenDangNhap": TenDangNhap });
-    //console.log(admin.MatKhau);
     if (admin) {
         if (bcrypt.compareSync(MatKhau, admin.MatKhau)) {
             res.send(admin);

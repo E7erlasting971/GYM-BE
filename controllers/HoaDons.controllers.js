@@ -2,6 +2,7 @@ const KhoaTap = require('../models/KhoaTap.models');
 const ThoiKhoaBieu = require('../models/ThoiKhoaBieu.models');
 const ChiTietHoaDon = require('../models/ChiTietHoaDon.models');
 const HoaDon = require('../models/HoaDon.models');
+
 const currentDate = new Date();
 const dateString = currentDate.toISOString().substring(0, 10);
 const moment = require('moment');
@@ -20,7 +21,7 @@ exports.getHoaDonsByHocVien = async(req, res) => {
 };
 exports.getHoaDons = async(req, res) => {
     try {
-        const HoaDons = await HoaDon.find().populate('idHocVien').populate("idKhoaTap");
+        const HoaDons = await HoaDon.find().populate('idHocVien').populate('idKhoaTap');
         res.status(200).json(HoaDons);
     } catch (error) {
         console.error(error);
@@ -43,7 +44,7 @@ exports.createHoaDon = async(req, res) => {
                 const newChiTietHoaDon = new ChiTietHoaDon({
                     idHoaDon: hoaDonId,
                     idKhoaTap: req.body.chiTietHoaDon[0].idKhoaTap,
-                    donGia: req.body.chiTietHoaDon[0].donGia // thông tin chi tiết hóa đơn được truyền vào từ client
+                    donGia: req.body.chiTietHoaDon[0].donGia
                 });
                 const createHoaDon = await newChiTietHoaDon.save();
                 res.status(200).send({
@@ -67,8 +68,23 @@ exports.createHoaDon = async(req, res) => {
                     const kt2 = await KhoaTap.getGioKetThuc(req.body.chiTietHoaDon[j].idKhoaTap);
                     const ngayTap1 = await KhoaTap.getChonNgayTap(req.body.chiTietHoaDon[i].idKhoaTap);
                     const ngayTap2 = await KhoaTap.getChonNgayTap(req.body.chiTietHoaDon[j].idKhoaTap);
-
-                    if (bd1 === bd2 && kt1 === kt2) {
+                    const tkb_bd = await ThoiKhoaBieu.getGioBatDau(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const tkb_kt = await ThoiKhoaBieu.getGioKetThuc(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const tkb_ngaytap = await ThoiKhoaBieu.getChonNgayTap(req.body.chiTietHoaDon[i].idKhoaTap);
+                    const tkb_ngaykt = await ThoiKhoaBieu.getNgayKetThuc(req.body.chiTietHoaDon[i].idKhoaTap);
+                    if (tkb_kt && tkb_kt < Date.now)
+                        if (bd1 === bd2 && kt1 === kt2 && tkb_bd === bd1 && kt1 === tkb_kt) {
+                            for (let h = 0; h < ngayTap1.length; h++)
+                                for (let k = 0; k < ngayTap2.length; k++)
+                                    for (let z = 0; z < tkb_ngaykt.length; z++) {
+                                        if (ngayTap1[h] === ngayTap2[k] && ngayTap1[h] === tkb_ngaytap[z]) {
+                                            res.status(401).send({
+                                                message: 'Trùng tkb '
+                                            });
+                                            return;
+                                        }
+                                    }
+                        } else if (bd1 === bd2 && kt1 === kt2) {
                         for (let h = 0; h < ngayTap1.length; h++)
                             for (let k = 0; k < ngayTap2.length; k++) {
                                 if (ngayTap1[h] === ngayTap2[k]) {
